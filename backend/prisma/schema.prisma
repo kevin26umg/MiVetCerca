@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USUARIO
+  CLINICA
+  ADMIN
+}
+
+model User {
+  id           Int           @id @default(autoincrement())
+  name         String
+  email        String        @unique
+  password     String
+  role         Role
+  clinicId     Int?
+  clinic       Clinic?       @relation(fields: [clinicId], references: [id])
+  pets         Pet[]
+  appointments Appointment[] 
+  createdAt    DateTime      @default(now())
+}
+
+
+model Clinic {
+  id         Int      @id @default(autoincrement())
+  name       String
+  address    String
+  phone      String
+  email      String
+  lat        Float
+  lng        Float
+  services   String[]
+  openHours  String
+  users      User[]
+  appointments Appointment[]
+}
+
+model Pet {
+  id        Int      @id @default(autoincrement())
+  name      String
+  species   String
+  breed     String
+  age       Int
+  weight    Float
+  ownerId   Int
+  records   MedicalRecord[]
+  owner     User     @relation(fields: [ownerId], references: [id])
+}
+
+model MedicalRecord {
+  id        Int      @id @default(autoincrement())
+  petId     Int
+  date      DateTime
+  reason    String
+  diagnosis String
+  treatment String
+  notes     String
+  pet       Pet      @relation(fields: [petId], references: [id])
+}
+
+model Appointment {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  clinicId    Int
+  date        DateTime
+  confirmed   Boolean  @default(false)
+  cancelled   Boolean  @default(false)
+  user        User     @relation(fields: [userId], references: [id])
+  clinic      Clinic   @relation(fields: [clinicId], references: [id])
+}
