@@ -38,16 +38,17 @@ export default function Register() {
     try {
       const payload = { ...form };
 
-      if (form.role === 'CLINICA') {
-        payload.clinicData.services = form.clinicData.services
-          .split(',')
-          .map((s) => s.trim())
-          .filter(Boolean);
-        payload.clinicData.lat = parseFloat(payload.clinicData.lat);
-        payload.clinicData.lng = parseFloat(payload.clinicData.lng);
-      } else {
-        delete payload.clinicData;
-      }
+  if (form.role === 'CLINICA') {
+  payload.clinicData.services = Array.isArray(form.clinicData.services)
+    ? form.clinicData.services
+    : form.clinicData.services.split(',').map((s) => s.trim()).filter(Boolean);
+
+  payload.clinicData.lat = parseFloat(payload.clinicData.lat);
+  payload.clinicData.lng = parseFloat(payload.clinicData.lng);
+} else {
+  delete payload.clinicData;
+}
+
 
       await api.post('/auth/register', payload);
       alert('Registro exitoso');
