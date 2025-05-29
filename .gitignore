@@ -1,2 +1,7 @@
+# Evita subir node_modules locales al contenedor
 backend/node_modules
 frontend/node_modules
+
+# Evita binarios de prisma generados localmente
+backend/.prisma
+backend/@prisma
