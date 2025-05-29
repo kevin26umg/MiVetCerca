@@ -22,16 +22,22 @@ services:
     depends_on:
       - db
 
-   nginx:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+
+  nginx:
     build:
       context: ./frontend
     ports:
       - "80:80"
     depends_on:
-      - backend
+      - frontend
     volumes:
       - ./frontend/nginx:/etc/nginx/conf.d
-
 
 volumes:
   pgdata:
