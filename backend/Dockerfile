@@ -10,4 +10,5 @@ RUN npm install
 COPY . .
 
 # Genera Prisma Client (en runtime, donde sí hay acceso a DATABASE_URL)
-CMD ["sh", "-c", "npx prisma generate && node src/index.js"]
+RUN chmod +x ./node_modules/.bin/prisma
+CMD ["sh", "-c", "./node_modules/.bin/prisma generate && node src/index.js"]
