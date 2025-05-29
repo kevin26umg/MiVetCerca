@@ -38,7 +38,6 @@ services:
       - frontend
     volumes:
       - ./frontend/nginx:/etc/nginx/conf.d
-      - ./frontend/nginx:/etc/nginx/conf.d
       - ./frontend/dist:/usr/share/nginx/html
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
