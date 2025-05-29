@@ -1,16 +1,37 @@
+# FROM node:18
+
+# WORKDIR /app
+
+# COPY package*.json ./
+# RUN npm install
+
+
+# COPY . .
+
+
+# RUN chmod +x ./node_modules/.bin/prisma
+# CMD ["sh", "-c", "./node_modules/.bin/prisma generate && node src/index.js"]
+# RUN chmod +x ./node_modules/.bin/prisma
+# RUN chmod +x ./node_modules/@prisma/engines/* || true
+
+
 FROM node:18
 
 WORKDIR /app
 
-# Instala solo dependencias necesarias
 COPY package*.json ./
+
+
+RUN npm install -g prisma
 RUN npm install
 
-# Copia todo el código
+
+RUN chmod +x ./node_modules/.bin/prisma && \
+    chmod -R +x ./node_modules/@prisma/engines || true
+
 COPY . .
 
-# Genera Prisma Client (en runtime, donde sí hay acceso a DATABASE_URL)
-RUN chmod +x ./node_modules/.bin/prisma
-CMD ["sh", "-c", "./node_modules/.bin/prisma generate && node src/index.js"]
-RUN chmod +x ./node_modules/.bin/prisma
-RUN chmod +x ./node_modules/@prisma/engines/* || true
+
+RUN npx prisma generate
+
+CMD ["node", "src/index.js"]
