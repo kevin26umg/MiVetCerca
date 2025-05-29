@@ -16,5 +16,5 @@ COPY . .
 
 
 RUN npx prisma generate
-
+RUN npx prisma migrate deploy
 CMD ["node", "src/index.js"]
