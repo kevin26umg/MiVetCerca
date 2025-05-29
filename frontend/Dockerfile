@@ -8,3 +8,4 @@ RUN npm run build
 # Etapa 2: nginx sirve el contenido
 FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
+RUN chmod -R 755 /usr/share/nginx/html
