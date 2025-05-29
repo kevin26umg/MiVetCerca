@@ -15,7 +15,7 @@ services:
 
   backend:
     build: ./backend
-    expose:
+    ports:
       - "8000:8000"
     environment:
       - DATABASE_URL=postgresql://admin:secret@db:5432/clinica
