@@ -4,17 +4,53 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export const register = async (req, res) => {
-  const { email, password, name, role } = req.body;
+  const { email, password, name, role, clinicData } = req.body;
+
   const hashedPassword = await bcrypt.hash(password, 10);
+
   try {
     const user = await prisma.user.create({
-      data: { email, password: hashedPassword, name, role }
+      data: {
+        email,
+        password: hashedPassword,
+        name,
+        role,
+      },
     });
-    res.json({ message: 'Usuario creado', user });
+
+    // Si el rol es CLINICA, crear la clínica asociada
+    let clinic = null;
+    if (role === 'CLINICA') {
+      if (!clinicData) {
+        return res.status(400).json({ error: 'Faltan datos de la clínica' });
+      }
+
+      const { name, address, phone, email, lat, lng, services, openHours } = clinicData;
+
+      clinic = await prisma.clinic.create({
+        data: {
+          name,
+          address,
+          phone,
+          email,
+          lat,
+          lng,
+          services,
+          openHours,
+          users: {
+            connect: { id: user.id }
+          }
+        }
+      });
+    }
+
+    res.json({ message: 'Usuario creado', user, clinic });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Error al registrar' });
   }
 };
+
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
