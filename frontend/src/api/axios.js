@@ -8,14 +8,14 @@ import axios from 'axios';
 // });
 
 
-const api = axios.create({
-  baseURL: 'http://localhost:8000/api',
-});
-
-
 // const api = axios.create({
-//   baseURL: "/api",
+//   baseURL: 'http://localhost:8000/api',
 // });
+
+
+const api = axios.create({
+  baseURL: "/api",
+});
 
 
 // ⬇️ Este interceptor agrega automáticamente el token a todas las peticiones
