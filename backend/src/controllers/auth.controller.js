@@ -4,7 +4,11 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export const register = async (req, res) => {
-  const { email, password, name, role, clinicData } = req.body;
+  const { email, password, name, role, phone, clinicData } = req.body;
+
+  if (!email || !password || !name || !phone || !role) {
+    return res.status(400).json({ error: 'Faltan datos obligatorios' });
+  }
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -14,12 +18,13 @@ export const register = async (req, res) => {
         email,
         password: hashedPassword,
         name,
+        phone,
         role,
       },
     });
 
-    // Si el rol es CLINICA, crear la clínica asociada
     let clinic = null;
+
     if (role === 'CLINICA') {
       if (!clinicData) {
         return res.status(400).json({ error: 'Faltan datos de la clínica' });
@@ -42,6 +47,12 @@ export const register = async (req, res) => {
           }
         }
       });
+
+      // actualizar user con clinicId (opcional pero recomendable)
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { clinicId: clinic.id }
+      });
     }
 
     res.json({ message: 'Usuario creado', user, clinic });
@@ -52,6 +63,7 @@ export const register = async (req, res) => {
 };
 
 
+
 export const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await prisma.user.findUnique({ where: { email } });
@@ -60,7 +72,26 @@ export const login = async (req, res) => {
   const match = await bcrypt.compare(password, user.password);
   if (!match) return res.status(401).json({ error: 'Contraseña incorrecta' });
 
-  const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
+const token = jwt.sign(
+  {
+    id: user.id,
+    role: user.role,
+    clinicId: user.clinicId || null, // 👈 importante
+  },
+  process.env.JWT_SECRET,
+  { expiresIn: '7d' }
+);
 
-  res.json({ token, user: { id: user.id, name: user.name, role: user.role } });
+
+
+ res.json({
+  token,
+  user: {
+    id: user.id,
+    name: user.name,
+    role: user.role,
+    clinicId: user.clinicId ?? null
+  }
+});
+
 };

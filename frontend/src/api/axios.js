@@ -1,11 +1,11 @@
 import axios from 'axios';
 
 
-// const api = axios.create({
-//   baseURL: import.meta.env.DEV
-//     ? 'http://localhost:8000/api' // Dev local
-//     : '/api',                     // Producción con Nginx proxy
-// });
+const api = axios.create({
+  baseURL: import.meta.env.DEV
+    ? 'http://localhost:8000/api' // Dev local
+    : '/api',                     // Producción con Nginx proxy
+});
 
 
 // const api = axios.create({
@@ -13,9 +13,9 @@ import axios from 'axios';
 // });
 
 
-const api = axios.create({
-  baseURL: "/api",
-});
+// const api = axios.create({
+//   baseURL: "/api",
+// });
 
 
 // ⬇️ Este interceptor agrega automáticamente el token a todas las peticiones

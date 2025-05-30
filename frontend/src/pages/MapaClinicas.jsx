@@ -4,6 +4,9 @@ import api from '../api/axios';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { FiSearch } from "react-icons/fi";
+import Navbar from '../components/Navbar-main';
+import { motion } from "framer-motion";
+
 
 
 function CentrarMapa({ position }) {
@@ -35,6 +38,8 @@ function BotonCentrar({ position }) {
 }
 
 export default function MapaClinicas() {
+
+  
   const [clinicas, setClinicas] = useState([]);
   const [busqueda, setBusqueda] = useState('');
   const [clinicasFiltradas, setClinicasFiltradas] = useState([]);
@@ -133,11 +138,21 @@ export default function MapaClinicas() {
   const idsFiltrados = busqueda.trim() ? new Set(clinicasFiltradas.map(c => c.id)) : new Set();
 
   return (
-    <div className="flex flex-col h-screen relative bg-transparent">
+    
+    <motion.div 
+          initial={{ opacity: 0, y: 0 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    className="flex flex-col h-screen relative bg-transparent">
         
+  <>
+      <Navbar />
+      <div > {/* Padding top para que no tape el mapa */}
+        {/* Aquí tu componente de mapa */}
+      </div>
+    </>
 
-
-    <div className="left-1/2 transform -translate-x-1/2 w-[90%] max-w-xlp-2 m-2 bg-gradient-to-r from-blue-400/40 to-cyan-300/40 backdrop-blur-md shadow-md z-10 absolute rounded-xl" ref={listaRef}>
+    <div className="left-1/2 mt-20 transform -translate-x-1/2 w-[90%] max-w-xlp-2 m-2 bg-gradient-to-r from-blue-400/40 to-cyan-300/40 backdrop-blur-md shadow-md z-10 absolute rounded-xl" ref={listaRef}>
     <div className="relative bg-transparent">
       <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl" />
       <input
@@ -228,6 +243,6 @@ export default function MapaClinicas() {
 
         
       </div>
-    </div>
+    </motion.div>
   );
 }

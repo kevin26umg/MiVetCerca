@@ -17,13 +17,17 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
+        {/* <Route path="/" element={<Login />} /> */}
+
+        <Route path="/" element={<MapaClinicas />} />
+        <Route path="/login" element={<Login />} />
+
         <Route path="/registro" element={<Register />} />
         <Route path="/panel-clinica" element={<PanelClinica />} />
         <Route path="/panel-usuario" element={<PanelUsuario />} />
         <Route path="/mascotas" element={<Mascotas />} />
        <Route path="/citas" element={<Citas />} />
-        <Route path="/mapa" element={<MapaClinicas />} />
+        {/* <Route path="/mapa" element={<MapaClinicas />} /> */}
 
       </Routes>
     </BrowserRouter>

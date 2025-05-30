@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import api from "../api/axios";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import { motion } from "framer-motion";
-
 
 export default function PanelClinica() {
   const [user, setUser] = useState(null);
@@ -22,24 +20,20 @@ export default function PanelClinica() {
       });
   }, []);
 
-  if (!user) return <div className="p-8 text-center text-gray-600">Cargando datos...</div>;
+  if (!user) return <div className="p-8 text-center">Cargando datos...</div>;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 1 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-     className="flex h-screen bg-gradient-to-br from-white to-blue-50">
+    <div className="flex h-screen bg-gray-100">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Navbar name={user.name} />
-        <main className="flex-1 p-8 overflow-y-auto">
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">Panel de administración</h2>
-          <p className="text-gray-600">
+        <main className="flex-1 p-6 overflow-y-auto">
+          <h2 className="text-2xl font-bold text-gray-700">Panel de administración</h2>
+          <p className="mt-2 text-gray-600">
             Aquí puedes gestionar tus mascotas, citas y el historial clínico.
           </p>
         </main>
       </div>
-    </motion.div>
+    </div>
   );
 }

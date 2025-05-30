@@ -18,6 +18,7 @@ model User {
   name         String
   email        String        @unique
   password     String
+  phone        String        // Teléfono del usuario
   role         Role
   clinicId     Int?
   clinic       Clinic?       @relation(fields: [clinicId], references: [id])
@@ -26,31 +27,34 @@ model User {
   createdAt    DateTime      @default(now())
 }
 
-
 model Clinic {
-  id         Int      @id @default(autoincrement())
-  name       String
-  address    String
-  phone      String
-  email      String
-  lat        Float
-  lng        Float
-  services   String[]
-  openHours  String
-  users      User[]
-  appointments Appointment[]
+  id            Int           @id @default(autoincrement())
+  name          String
+  address       String
+  phone         String
+  email         String
+  lat           Float
+  lng           Float
+  services      String[]
+  openHours     String
+  users         User[]
+  appointments  Appointment[]
+  pets          Pet[]         // Relación: mascotas registradas por esta clínica
 }
 
 model Pet {
   id        Int      @id @default(autoincrement())
   name      String
-  species   String
-  breed     String
-  age       Int
-  weight    Float
-  ownerId   Int
+  species   String?   // Opcional para clínicas
+  breed     String?
+  age       Int?
+  weight    Float?
+  phone     String?   // Teléfono del dueño (en caso de que no esté registrado)
+  ownerId   Int?
+  clinicId  Int?
+  owner     User?     @relation(fields: [ownerId], references: [id])
+  clinic    Clinic?   @relation(fields: [clinicId], references: [id])
   records   MedicalRecord[]
-  owner     User     @relation(fields: [ownerId], references: [id])
 }
 
 model MedicalRecord {
