@@ -18,43 +18,44 @@ model User {
   name         String
   email        String        @unique
   password     String
-  phone        String        // Teléfono del usuario
+  phone        String // Teléfono del usuario
   role         Role
   clinicId     Int?
   clinic       Clinic?       @relation(fields: [clinicId], references: [id])
   pets         Pet[]
-  appointments Appointment[] 
+  appointments Appointment[]
   createdAt    DateTime      @default(now())
 }
 
 model Clinic {
-  id            Int           @id @default(autoincrement())
-  name          String
-  address       String
-  phone         String
-  email         String
-  lat           Float
-  lng           Float
-  services      String[]
-  openHours     String
-  users         User[]
-  appointments  Appointment[]
-  pets          Pet[]         // Relación: mascotas registradas por esta clínica
+  id           Int           @id @default(autoincrement())
+  name         String
+  address      String
+  phone        String
+  email        String
+  lat          Float
+  lng          Float
+  services     String[]
+  openHours    String
+  users        User[]
+  appointments Appointment[]
+  pets         Pet[] // Relación: mascotas registradas por esta clínica
 }
 
 model Pet {
-  id        Int      @id @default(autoincrement())
-  name      String
-  species   String?   // Opcional para clínicas
-  breed     String?
-  age       Int?
-  weight    Float?
-  phone     String?   // Teléfono del dueño (en caso de que no esté registrado)
-  ownerId   Int?
-  clinicId  Int?
-  owner     User?     @relation(fields: [ownerId], references: [id])
-  clinic    Clinic?   @relation(fields: [clinicId], references: [id])
-  records   MedicalRecord[]
+  id           Int             @id @default(autoincrement())
+  name         String
+  species      String?
+  breed        String?
+  age          Int?
+  weight       Float?
+  phone        String?
+  ownerId      Int?
+  clinicId     Int?
+  owner        User?           @relation(fields: [ownerId], references: [id])
+  clinic       Clinic?         @relation(fields: [clinicId], references: [id])
+  records      MedicalRecord[]
+  appointments Appointment[]
 }
 
 model MedicalRecord {
@@ -70,11 +71,15 @@ model MedicalRecord {
 
 model Appointment {
   id          Int      @id @default(autoincrement())
-  userId      Int
+  userId      Int? // ← ahora es opcional
   clinicId    Int
+  petId       Int
   date        DateTime
+  description String?
   confirmed   Boolean  @default(false)
   cancelled   Boolean  @default(false)
-  user        User     @relation(fields: [userId], references: [id])
-  clinic      Clinic   @relation(fields: [clinicId], references: [id])
+
+  user   User?  @relation(fields: [userId], references: [id])
+  clinic Clinic @relation(fields: [clinicId], references: [id])
+  pet    Pet    @relation(fields: [petId], references: [id])
 }

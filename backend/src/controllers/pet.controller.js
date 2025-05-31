@@ -127,3 +127,20 @@ export const deletePet = async (req, res) => {
     res.status(500).json({ error: 'Error al eliminar mascota' });
   }
 };
+export const getAllPets = async (req, res) => {
+  const { role } = req.user;
+
+  if (role !== 'CLINICA') {
+    return res.status(403).json({ error: "Solo una clínica puede ver todas las mascotas" });
+  }
+
+  try {
+    const pets = await prisma.pet.findMany({
+      orderBy: { name: 'asc' },
+    });
+    res.json(pets);
+  } catch (err) {
+    console.error("Error al obtener mascotas:", err);
+    res.status(500).json({ error: "Error al obtener mascotas" });
+  }
+};
